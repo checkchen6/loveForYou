@@ -9,6 +9,16 @@
 	font-family: digit;
 	src: url('digital-7_mono.ttf') format("truetype");
 }
+.dateSuffix {
+	font-size:18px
+}
+.signSuffix {
+	margin-right: 25px;
+}
+.birthYearClass {
+	text-align: right;
+    margin-right: 28px;
+}
 </style>
 
 <link href="css/default.css" type="text/css" rel="stylesheet">
@@ -55,10 +65,10 @@
 				<div id="messages">
 					小公主健康成长......
 					<div id="elapseClock"></div>
+					<div id="birthYear"></div>
 				</div>
 			<div id="loveu">
-					<br/>
-					<div class="signature">- 唐文霞&陈祥朋</div>
+					<div class="signature signSuffix">- 唐文霞&陈祥朋</div>
 				</div>
 
 			</div>
@@ -95,9 +105,39 @@ if (!document.createElement('canvas').getContext) {
 	setInterval(function () {
 		timeElapse(together);
 	}, 500);
+	var birthYearDiv = document.getElementById('birthYear');
+    // Assuming you want to display the year of the 'together' date
+    var age = calculateAge(together);
+    birthYearDiv.innerHTML = "&emsp;&nbsp;年龄: <br><div class='birthYearClass'>" + age.years + "<span class='dateSuffix'> years </span>" + age.months + "<span class='dateSuffix'> months </span>" + age.days + "<span class='dateSuffix'> days </span></div>";
 
 	adjustCodePosition();
 	$("#code").typewriter();
+}
+function calculateAge(birthDate) {
+    var today = new Date();
+    var yearsDiff = today.getFullYear() - birthDate.getFullYear();
+    var monthsDiff = today.getMonth() - birthDate.getMonth();
+    var daysDiff = today.getDate() - birthDate.getDate();
+
+    // 如果今天的日期小于出生日期，则月份差减一，并计算上个月的最后一天
+    if (daysDiff < 0) {
+        // 获取上个月
+        var lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        daysDiff += lastMonth.getDate(); // 加上上个月的总天数
+        monthsDiff--;
+    }
+
+    // 如果当前月份小于出生月份，则年份差减一，并且月份差加上12（因为是从上一年算起）
+    if (monthsDiff < 0) {
+        monthsDiff += 12;
+        yearsDiff--;
+    }
+
+    return {
+        years: yearsDiff,
+        months: monthsDiff,
+        days: daysDiff
+    };
 }
 </script>
 <!--音乐-->
